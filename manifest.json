@@ -1,7 +1,7 @@
 {
-  "name": "ManEater",
-  "short_name": "Man Eater",
-  "start_url": "index.html",
+  "name": "DaEatAR",
+  "short_name": "DaEatAR",
+  "start_url": "app.html",
   "display": "standalone",
   "orientation": "landscape",
   "permissions": {

@@ -8,15 +8,21 @@
         <meta name="description" content="A JavaScript Computer Vision Library">
         <meta name="author" content="Gilad Dayagi">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Beware the fruit eater!</title>
+        <title>Beware the Monstar!</title>
         <link rel="stylesheet" href="css/app.css">
         <link rel="manifest" href="manifest.json">
     </head>
     <body>
+        <div id="cover" class="overlay">
+            <div class="content">
+                <h1>The Monst<span>ar</span></h1>
+                <button id="btn_start" class="btn-big-red">Start</button>
+            </div>
+        </div>
         <video id="webcam" width="640" height="480" style="display:none;"></video>
         <canvas id="canvas" width="640" height="480"></canvas>
         <div id="wrap">
-            <div id="no_rtc" class="alert alert-error" style="display:none;"></div>
+            <div id="err" class="alert alert-error" style="display:none;"></div>
             <div id="log" class="alert alert-info"></div>
         </div>
 

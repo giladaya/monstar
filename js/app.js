@@ -1,27 +1,30 @@
 $(window).load(function() {
     "use strict";
 
-    // screen.addEventListener('onorientationchange', function() {
-
-    // });
-
-    function onGameStart () {
-      compatibility.requestFullScreen(document.documentElement);
-      screen.orientation.lock('landscape').then(function() {
-        console.log(screen.orientation);
-      }, 
-      function(error) {
-        console.log(error);
-        document.exitFullscreen()
-      });
-    }
-
-    onGameStart();
-
 
     // lets do some fun
     var video = document.getElementById('webcam');
     var canvas = document.getElementById('canvas');
+
+    
+    document.getElementById("btn_start").addEventListener("click", function() {
+      if ('orientation' in screen && 'lock' in screen.orientation) {
+        // document.documentElement.requestFullScreen();
+        compatibility.requestFullScreen(document.documentElement);
+        screen.orientation.lock("landscape-primary").then().catch(function(err){
+          notify('Failed to lock orientation');
+          console.log(err);
+        });
+      }
+      initVideo();
+      document.getElementById('cover').className += ' hidden';
+    }, false);
+
+    function notify(msg) {
+      $('#err').html(msg);
+      $('#err').show();
+    }
+
 
     function initVideo() {
       try {
@@ -56,10 +59,8 @@ $(window).load(function() {
             onGumSuccess, 
             onGumError);
       } catch (error) {
-          $('#canvas').hide();
-          $('#log').hide();
-          $('#no_rtc').html('<h4>Something went wrong...</h4>');
-          $('#no_rtc').show();
+          console.log(error);
+          notify('Something went wrong...');
       }
     }
 
@@ -75,12 +76,8 @@ $(window).load(function() {
       }, 500);
     }
     function onGumError(error){
-      $('#canvas').hide();
-      $('#log').hide();
-      $('#no_rtc').html('<h4>WebRTC not available.</h4>');
-      $('#no_rtc').show();
+      notify('WebRTC not available.');
     }
-
 
 
     var stat = new profiler();

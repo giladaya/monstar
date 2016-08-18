@@ -1,0 +1,9 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  margin: 0;
+}
+
+h1 span {
+  color: red;
+}

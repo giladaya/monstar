@@ -1,0 +1,6 @@
+{
+  "name": "Monstar",
+  "tagline": "Demo for a mobile AR game",
+  "body": "This is a demo AR game, which uses the [jsfeat](https://inspirit.github.io/jsfeat/) CV library for feature tracking.  \r\nIt was initially meant to be played from a driving car, but the frame rate usually is not high enough :/  \r\n  \r\nAnyway, I think it's a nice demo for using optical flow tracking in implementing AR apps.  \r\n  \r\nBest used on an Android mobile device (iPhones don't support getUserMedia as of this writing).\r\n  \r\n[Start the demo &#9655;](app.html)",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}

@@ -1,0 +1,15 @@
+{
+  "name": "DaEatAR",
+  "short_name": "DaEatAR",
+  "start_url": "app.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "permissions": {
+    "audio-capture": {
+      "description": "Required to capture audio using getUserMedia()"
+    },
+    "video-capture": {
+      "description": "Required to capture video using getUserMedia()"
+    }
+  }
+}

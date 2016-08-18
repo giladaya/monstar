@@ -168,7 +168,7 @@
   var Options = function() {
     //points
     this.threshold = 20;
-    this.show_track_pts = true;
+    this.show_track_pts = false;
 
     //tracker
     this.win_size = 20;

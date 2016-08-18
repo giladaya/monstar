@@ -75,6 +75,9 @@ header h1 {
   color: #303030;
   letter-spacing: -1px;
 }
+header h1 span {
+  color: red;
+}
 
 header h2 {
   font-size: 24px;

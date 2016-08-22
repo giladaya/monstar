@@ -4,6 +4,8 @@ It was initially meant to be played from a car, but the frame rate usually is no
   
 Anyway, I think it's a nice demo for using optical flow tracking in implementing AR apps.  
   
-Try it on an Android mobile device as iPhones don't support getUserMedia as of this writing.
+## Important!
+The game only makes sense when played on a mobile device, and it was only tested with Chrome 52 for Android (should work with later versions too).  
+Also, as of this writing, iPhones don't support getUserMedia which is needed by the app, so no point trying.
   
 [Demo](https://giladaya.github.io/monstar/app/index.html)

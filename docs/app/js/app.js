@@ -38,59 +38,51 @@
     if ('orientation' in screen && 'lock' in screen.orientation) {
       // document.documentElement.requestFullScreen();
       compatibility.requestFullScreen(document.documentElement);
-      screen.orientation.lock("landscape-primary").then().catch(function(err) {
-        notify('Failed to lock orientation');
-        console.log(err);
-      });
+      screen.orientation.lock("landscape-primary")
+        .then()
+        .catch(function(err) {
+          notify('Failed to lock orientation');
+          console.log(err);
+        });
     }
-    initVideo();
+
+    //init video
+    video.addEventListener("loadedmetadata", function(ev) { 
+        startApp(video.videoWidth, video.videoHeight);
+        compatibility.requestAnimationFrame(tick);
+    }, false);
+    getBackCamId(initVideo);
+
     document.getElementById('cover').className += ' hidden';
   }, false);
 
+
+  // Look for "back" in label, or use last cam (typically back cam).
+  function getBackCamId(cb) {
+    navigator.mediaDevices.enumerateDevices()
+      .then(function(devices) {
+        devices = devices.filter(function(d) {
+          return d.kind === 'videoinput';
+        });
+        var back = devices.find(function(d) {
+          return d.label.toLowerCase().indexOf('back') !== -1;
+        }) || (devices.length && devices[devices.length - 1]);
+
+        var constraints = {video: true}
+        if (back) {
+          constraints.video = {deviceId: back.deviceId};
+          // constraints.video = {mandatory: {deviceId: back.deviceId}};
+        }
+        return cb(constraints);
+      });
+  }
   
   /**
    * Initialize camera video stream
    */
-  function initVideo() {
-    try {
-      var attempts = 0;
-      var readyListener = function(event) {
-        findVideoSize();
-      };
-      var findVideoSize = function() {
-        if (video.videoWidth > 0 && video.videoHeight > 0) {
-          video.removeEventListener('loadeddata', readyListener);
-          onDimensionsReady(video.videoWidth, video.videoHeight);
-        } else {
-          if (attempts < 10) {
-            attempts++;
-            setTimeout(findVideoSize, 200);
-          } else {
-            onDimensionsReady(640, 480);
-          }
-        }
-      };
-      var onDimensionsReady = function(width, height) {
-        //start the app
-        startApp(width, height);
-        compatibility.requestAnimationFrame(tick);
-      };
-
-      video.addEventListener('loadeddata', readyListener);
-
-      compatibility.getUserMedia({
-          video: {
-            facingMode: {
-              exact: 'environment'
-            }
-          }
-        },
-        onGumSuccess,
-        onGumError);
-    } catch (error) {
-      console.log(error);
-      notify('Something went wrong...');
-    }
+  function initVideo(constraints) {
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(onGumSuccess).catch(onGumError);
   }
 
   /** 
@@ -112,6 +104,7 @@
    */
   function onGumError(error) {
     notify('WebRTC not available.');
+    console.error(error);
   }
 
   /** 
@@ -139,20 +132,20 @@
       'cx': x + w / 2,
       'cy': y + h / 2
     };
-    return {
-      'id': ~~(Math.random() * 10000000),
-      'coords': coords,
-      'old_coords': coords,
-      'is_stale': false,
-      'is_live': true,
-      'points': [], //indexes of related tracking points
-      'age': 0, //age since birth / since death
-      'type': type, //object type
-      'score': score //object score
-    };
+
+    this.id = ~~(Math.random() * 10000000);
+    this.coords = coords;
+    this.old_coords = coords;
+    this.is_stale = false;
+    this.is_live = true;
+    this.points = [];
+    this.age = 0;
+    this.type = type;
+    this.score = score;
   }
 
-  function setTargetCoords(target, x, y) {
+  Target.prototype.setCoords = function(x, y) {
+    var target = this;
     target.old_coords = target.coords;
     target.coords = Object.assign({}, target.coords, {
       x: x,
@@ -393,7 +386,8 @@
       var dy = target.coords.y - target.old_coords.y;
       dx /= 3;
       dy /= 3;
-      setTargetCoords(target, target.coords.x + dx, target.coords.y + dy);
+
+      target.setCoords(target.coords.x + dx, target.coords.y + dy);
     }
   }
 
@@ -420,7 +414,7 @@
       new_cx /= target.points.length;
       new_cy /= target.points.length;
 
-      setTargetCoords(target, new_cx - target.coords.w / 2, new_cy - target.coords.h / 2);
+      target.setCoords(new_cx - target.coords.w / 2, new_cy - target.coords.h / 2);
     }
   }
 

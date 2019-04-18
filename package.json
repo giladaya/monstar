@@ -1,0 +1,24 @@
+{
+  "name": "monstar",
+  "version": "1.0.0",
+  "description": "This is a demo AR game, which uses the [jsfeat](https://inspirit.github.io/jsfeat/) CV library.   It was initially meant to be played from a car, but the frame rate usually is not high enough :/",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:pages": "rm -rf docs/app; cp -r app docs/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giladaya/monstar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giladaya/monstar/issues"
+  },
+  "homepage": "https://github.com/giladaya/monstar#readme"
+}

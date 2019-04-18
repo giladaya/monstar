@@ -1,4 +1,4 @@
-(function($, compatibility, profiler, jsfeat, dat) {
+(function(profiler, jsfeat, dat) {
   "use strict";
 
   var MAX_POINTS = 200; //global max tracking points
@@ -36,8 +36,7 @@
   //Try to lock screen orientation
   document.getElementById("btn_start").addEventListener("click", function() {
     if ('orientation' in screen && 'lock' in screen.orientation) {
-      // document.documentElement.requestFullScreen();
-      compatibility.requestFullScreen(document.documentElement);
+      document.body.requestFullscreen();
       screen.orientation.lock("landscape-primary")
         .then()
         .catch(function(err) {
@@ -87,8 +86,9 @@
    * Notify of an error
    */
   function notify(msg) {
-    $('#err').html(msg);
-    $('#err').show();
+    const $err = document.getElementById('err');
+    $err.innerHTML = msg;
+    $err.style.display = 'block'
   }
   
 
@@ -202,7 +202,7 @@
     gui.close();
 
     //register cleanup
-    $(window).unload(function() {
+    window.addEventListener("beforeunload", function(event) { 
       video.pause();
       video.src = null;
     });
@@ -420,7 +420,7 @@
 
 
   function tick() {
-    compatibility.requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
     stat.new_frame();
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
 
@@ -472,7 +472,7 @@
   }
 
   function showStats() {
-    $('#log').html(stat.log());
+    document.getElementById('log').innerHTML = stat.log();
   }
 
   /**
@@ -716,4 +716,4 @@
     ctx.fill();
   }
   
-})($, compatibility, profiler, jsfeat, dat);
+})(profiler, jsfeat, dat);

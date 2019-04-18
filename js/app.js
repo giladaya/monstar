@@ -46,36 +46,11 @@
         });
     }
 
-    //init video
-    video.addEventListener("loadedmetadata", function(ev) { 
-        startApp(video.videoWidth, video.videoHeight);
-        compatibility.requestAnimationFrame(tick);
-    }, false);
-    getBackCamId(initVideo);
+    var constraints = { video: { facingMode: "environment" } };
+    initVideo(constraints);
 
     document.getElementById('cover').className += ' hidden';
   }, false);
-
-
-  // Look for "back" in label, or use last cam (typically back cam).
-  function getBackCamId(cb) {
-    navigator.mediaDevices.enumerateDevices()
-      .then(function(devices) {
-        devices = devices.filter(function(d) {
-          return d.kind === 'videoinput';
-        });
-        var back = devices.find(function(d) {
-          return d.label.toLowerCase().indexOf('back') !== -1;
-        }) || (devices.length && devices[devices.length - 1]);
-
-        var constraints = {video: true}
-        if (back) {
-          constraints.video = {deviceId: back.deviceId};
-          // constraints.video = {mandatory: {deviceId: back.deviceId}};
-        }
-        return cb(constraints);
-      });
-  }
   
   /**
    * Initialize camera video stream
@@ -88,23 +63,24 @@
   /** 
    * getUserMedia callback
    */
-  function onGumSuccess(stream) {
-    try {
-      video.src = compatibility.URL.createObjectURL(stream);
-    } catch (error) {
-      video.src = stream;
-    }
-    setTimeout(function() {
+  function onGumSuccess(mediaStream) {
+    video.srcObject = mediaStream;
+    video.onloadedmetadata = function(e) {
       video.play();
-    }, 500);
+
+      const width = video.videoWidth || 640;
+      const height = video.videoHeight || 480;
+      startApp(width, height);
+      requestAnimationFrame(tick);
+    };
   }
 
   /** 
    * getUserMedia callback
    */
-  function onGumError(error) {
+  function onGumError(err) {
     notify('WebRTC not available.');
-    console.error(error);
+    console.log(err.name + ": " + err.message);
   }
 
   /** 
